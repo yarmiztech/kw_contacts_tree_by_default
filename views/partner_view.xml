@@ -1,0 +1,54 @@
+<odoo>
+    <!-- Default tree view for contacts -->
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="contacts.action_contacts_view_kanban"
+            model="ir.actions.act_window.view">
+        <field name="sequence" eval="9"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="contacts.action_contacts"/>
+    </record>
+
+    <record id="base.action_partner_form" model="ir.actions.act_window">
+        <field name="view_mode">tree,form,kanban,activity</field>
+    </record>
+
+    <record id="base.action_partner_form_view1"
+            model="ir.actions.act_window.view">
+        <field eval="9" name="sequence"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="base.action_partner_form"/>
+    </record>
+
+           <record id="base.view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="name"
+                        filter_domain="['|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self)]"/>
+<!--                    <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>-->
+<!--                    <field name="email" filter_domain="[('email', 'ilike', self)]"/>-->
+<!--                    <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]"/>-->
+<!--                    <field name="category_id" string="Tag" filter_domain="[('category_id', 'child_of', self)]"/>-->
+<!--                    <field name="user_id"/>-->
+                    <separator/>
+                    <filter string="Individuals" name="type_person" domain="[('is_company', '=', False)]"/>
+                    <filter string="Companies" name="type_company" domain="[('is_company', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
+                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+</odoo>
